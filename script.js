@@ -2,8 +2,31 @@
 let tareasPorHacer = []; 
 let tareasTerminadas = []; 
 
-// Configuración de la API - CAMBIAR ESTA URL cuando despliegues en Render
+// Configuración de la API
 const API_URL = 'https://tareas.materiamental.cl/api/tasks';
+const HEALTH_URL = 'https://tareas.materiamental.cl/health';
+
+// Keep-alive: Ping al backend cada 10 minutos para mantenerlo activo
+function iniciarKeepAlive() {
+    // Ping inmediato al cargar
+    hacerPing();
+    
+    // Ping cada 10 minutos
+    setInterval(hacerPing, 10 * 60 * 1000);
+}
+
+async function hacerPing() {
+    try {
+        const response = await fetch(HEALTH_URL);
+        if (response.ok) {
+            console.log('Keep-alive ping exitoso -', new Date().toLocaleTimeString());
+        } else {
+            console.warn('Keep-alive ping falló con status:', response.status);
+        }
+    } catch (error) {
+        console.error('Keep-alive ping error:', error.message);
+    }
+}
 
 // Cargar tareas desde el backend
 async function cargarTareas() {
@@ -21,7 +44,7 @@ async function cargarTareas() {
         actualizarContadores();
     } catch (error) {
         console.error('Error cargando tareas:', error);
-        alert('No se pudieron cargar las tareas. Verifica tu conexión.');
+        alert('No se pudieron cargar las tareas. Verifica tu conexión.\n\n¿Está el backend activo? Verifica: ' + HEALTH_URL);
     }
 }
 
@@ -48,7 +71,10 @@ async function agregarTarea() {
             })
         });
         
-        if (!response.ok) throw new Error('Error al agregar tarea');
+        if (!response.ok) {
+            const errorData = await response.text();
+            throw new Error(`Error del servidor: ${response.status} - ${errorData}`);
+        }
         
         // Limpiar formulario
         textarea.value = '';
@@ -57,7 +83,7 @@ async function agregarTarea() {
         await cargarTareas();
     } catch (error) {
         console.error('Error agregando tarea:', error);
-        alert('No se pudo agregar la tarea. Intenta de nuevo.');
+        alert(`No se pudo agregar la tarea.\n\nError: ${error.message}\n\n¿Está el backend funcionando? Verifica: ${HEALTH_URL}`);
     }
 }
 
@@ -203,6 +229,9 @@ async function exportarTareas() {
 
 // Eventos
 document.addEventListener('DOMContentLoaded', function() {
+    // Iniciar keep-alive
+    iniciarKeepAlive();
+    
     // Cargar tareas desde el backend al inicio
     cargarTareas();
     
