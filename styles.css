@@ -1,42 +1,3 @@
-/*
-* {
-    margin: 0px;
-    padding: 0px;
-    box-sizing: border-box;
-}
-
-body {
-    width: auto;
-    font-family: 'Courier New', Courier, monospace;
-}
-
-section, header, footer {
-    margin: 1rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-li {
-    display: flex;
-}
-
-
-.tarea, .opciones {
-    display: flex;
-    gap: 1rem;
-}
-
-.botones {
-    display: flex;
-    justify-content: space-evenly;
-}
-
-.tarea {
-    width: 20rem;
-}
-*/
-
 * {
     margin: 0px;
     padding: 0px;
@@ -150,9 +111,10 @@ ul {
 li {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     padding: 1.5rem 0;
     border-bottom: 1px solid #f0f0f0;
+    gap: 1rem;
 }
 
 li:last-child {
@@ -164,24 +126,33 @@ li:last-child {
     gap: 1rem;
     align-items: flex-start;
     flex-grow: 1;
+    min-width: 0;
+    overflow: hidden;
 }
 
 .tareaID {
     font-weight: 500;
     color: #999;
     min-width: 30px;
+    flex-shrink: 0;
 }
 
 .tareaNombre {
     font-size: 1rem;
     color: #333;
     line-height: 1.5;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    hyphens: auto;
+    flex: 1;
 }
 
 .opciones {
     display: flex;
     gap: 1rem;
     align-items: center;
+    flex-shrink: 0;
 }
 
 .opciones button {
@@ -189,6 +160,7 @@ li:last-child {
     font-size: 0.8rem;
     color: #666;
     border-color: #ddd;
+    white-space: nowrap;
 }
 
 .opciones button:hover {
@@ -202,6 +174,7 @@ input[type="checkbox"] {
     height: 18px;
     cursor: pointer;
     accent-color: #333;
+    flex-shrink: 0;
 }
 
 /* Footer */
@@ -244,7 +217,7 @@ footer h4 {
     }
 }
 
-/* Estados vacÃ­os */
+/* Estados vacíos */
 li:only-child {
     text-align: center;
     color: #999;
